@@ -1,4 +1,4 @@
-name: Auto-grading
+name: Auto-grading (Simplified Upstream Fetch, Unified Tests, No legacy tests/)
 
 on:
   push:
@@ -20,44 +20,34 @@ jobs:
       with:
         python-version: '3.10'
     
-    - name: Pull updates from upstream
+    - name: Fetch latest tests and workflow from upstream (read-only)
       run: |
-        # Configure git to allow merging unrelated histories
-        git config --global pull.rebase false
-        
-        # Set git user identity
+        # Configure git user identity
         git config --global user.name "GitHub Actions Bot"
         git config --global user.email "actions@github.com"
         
-        # Hardcoded upstream repository URL (using HTTPS instead of SSH)
-        UPSTREAM_URL="https://github.com/UCSF-DataSci/ucsf-datasci-223-25-winter-test-0-datasci223_assignment1.git"
-        echo "Setting upstream to: $UPSTREAM_URL"
+        # Add upstream remote if not exists
+        if ! git remote | grep -q upstream; then
+          git remote add upstream https://github.com/UCSF-DataSci/ucsf-datasci-223-25-winter-test-0-datasci223_assignment1.git
+        fi
         
-        # Add the upstream repository
-        git remote add upstream $UPSTREAM_URL
-        
-        # Fetch the latest changes from upstream
+        # Fetch upstream without merging
         git fetch upstream
         
-        # Merge the changes from upstream/main into the current branch
-        git merge upstream/main --allow-unrelated-histories
+        # Overwrite local .github/tests and workflow files with upstream versions
+        git checkout upstream/main -- .github/tests/ .github/workflows/classroom.yml || true
         
-        # If there are conflicts, resolve them by taking the upstream version
-        # This is a simple approach - you might want more sophisticated conflict resolution
-        git checkout --theirs tests/
-        git add tests/
-        
-        # Commit the merged changes
-        git commit -m "Merge updates from upstream template"
+        # Optionally, remove upstream remote to avoid confusion
+        git remote remove upstream || true
     
-    - name: Install dependencies
+    - name: Install test dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install pytest
+        pip install -r .github/tests/requirements.txt
     
     - name: Run tests
       run: |
-        pytest tests/test_email_hasher.py -v
+        pytest .github/tests/test_assignment.py -v
     
     - name: Check for README.md
       run: |
@@ -68,4 +58,4 @@ jobs:
         
         if ! grep -q "http" README.md; then
           echo "WARNING: README.md might be missing a link to music recommendation"
-        fi 
+        fi
