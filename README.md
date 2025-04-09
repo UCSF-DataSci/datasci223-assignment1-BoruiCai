@@ -49,11 +49,12 @@ This assignment will help you practice:
 - Clone the repository to your local machine to begin working on the assignment
 
 ### Part 1: Update this README.md
-Replace the "Part 1" section with:
-- A brief introduction about yourself (first name only)
-- What you're hoping to get out of this course
-- Topics you would like to see included
-- A musical recommendation and a link to something about it (song, album, artist)
+
+My name is Borui, and I’m a first-year Health Data Science student.
+I hope this course will help me become more proficient in using Python for machine learning.
+I’d also love to learn more about LLM.
+My favorite album is OK Computer from Radiohead, which is their imagination of technology in 1997, and it sounds amazing.
+ https://open.spotify.com/album/6dVIqQ8qmQ5GBnJ9shOYGE?si=2dvDwflFQ-yp-xy2fB8m7A
 
 ### Part 2: Complete the email_hasher.py Script
 The email_hasher.py script should:
