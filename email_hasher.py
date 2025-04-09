@@ -16,23 +16,44 @@ import sys
 import hashlib
 
 def hash_email(email):
+    """
+    Hash an email address using SHA-256 and return the hexadecimal digest.
+    
+    Args:
+        email (str): The email address to hash
+        
+    Returns:
+        str: The SHA-256 hash of the email in hexadecimal format
+    """
     bytes_1 = email.encode('utf-8') 
     sha = hashlib.sha256(bytes_1)
     return sha.hexdigest()
+    pass
 
 def write_hash_to_file(hash_value, filename="hash.email"):
-    with open(filename, 'w') as f:
-      f.write(hash_value)   
+    """
+    Write a hash value to a file.
     
+    Args:
+        hash_value (str): The hash value to write
+        filename (str): The name of the file to write to (default: "hash.email")
+    """
+    with open(filename, 'w') as f:
+      f.write(hash_value)
+    pass
+
 def main():
+    """
+    Main function to process command line arguments and execute the script.
+    """
     if len(sys.argv) != 2:
         print("Usage: python email_hasher.py <email_address>")
         sys.exit(1)
 
     email = sys.argv[1]
     hash = hash_email(email)
-    
     write_hash_to_file(hash)
+    pass
 
 if __name__ == "__main__":
     main()
